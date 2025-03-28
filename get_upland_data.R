@@ -29,7 +29,7 @@ event%>%
   distinct()%>%
   arrange(EventYear)
 #write event to datafiles
-write.csv(event, "/view_Event_Sampled_2007-2024.csv", row.names = F)
+write.csv(event, "view_Event_Sampled_2007-2024.csv", row.names = F)
 #######################################################################################################
 #get soil stability table to publish
 soil.stab<- dbReadTable(conUp, "view_SoilStability_All", as.is=FALSE, 
@@ -77,7 +77,7 @@ surf.fea<- dbReadTable(conUp, "view_Event_Sampled", as.is=FALSE,
 surf.fea.data<-surf.fea%>%
   select(Park, EcoSite, Plot, EventYear, TransectLetter, QuadratNumber, SurfaceFeaturesCollected,
          SurfaceFeature, CoverClassMidpoint_Quadrat_pct, CoverClass)%>%
-  filter(EventYear<2020)
+  filter(EventYear<2021)
 #check number of years
 surf.fea.data%>%
   select(EventYear)%>%
@@ -102,7 +102,7 @@ surf.fea.data<-surf.fea.data%>%
 nacheck<-surf.fea.data%>%
   filter_all(any_vars(is.na(.)))
 
-write.csv(surf.fea.data, "SCPN_UplandVegetation_2007-2024/DataFiles/view_SurfaceFeatures_All_2007-2020.csv", row.names = F)
+write.csv(surf.fea.data, "view_SurfaceFeatures_All_2007-2020.csv", row.names = F)
 #######################################################################################################
 #functional groups
 
@@ -175,7 +175,7 @@ spp.all.occur<-spp.all.occur%>%
 nacheck<-spp.all.occur%>%
   filter_all(any_vars(is.na(.)))
 
-write.csv(spp.all.occur, "Z:/DataManagement/DataPackages/SCPN_UplandVegetation/SCPN_UplandVegetation_2007-2024/DataFiles/view_NestedSpecies_All_2007-2023.csv", row.names=F)
+write.csv(spp.all.occur, "view_NestedSpecies_All_2007-2024.csv", row.names=F)
 ########################################################################################################
 
 #species plot summaries
@@ -199,7 +199,7 @@ spp.summary<-spp.summary%>%
 nacheck<-spp.summary%>%
   filter_all(any_vars(is.na(.)))
 
-write.csv(spp.summary, "vtbl_NestedSpeciesSummary_ParkEcoPlot_2007-2023.csv", row.names = F)
+write.csv(spp.summary, "vtbl_NestedSpeciesSummary_ParkEcoPlot_2007-2024.csv", row.names = F)
 #############################################################################################
 #Seedlings
 seedlings.all<-dbReadTable(conUpE, "view_Seedling_All")
