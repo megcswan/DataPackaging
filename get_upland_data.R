@@ -18,8 +18,8 @@ conUpE <- DBI::dbConnect(odbc::odbc(),
 dbsqlview <- read.table(conUpE, tableType = "VIEW", schema = "dbo")
 #########################################################################################################
 #get event table to publish
-event <- dbReadTable(conUp, "view_Event_Sampled")%>%
-  select(Park, EcoSite, Plot, EventYear, EventDate)
+event <- dbReadTable(conUpE, "view_Event_Sampled")%>%
+  select(Park, EcoSite, Plot, EventYear, EventPanel, EventDate)
 #do some checks
 event%>%
   select(Park, EcoSite)%>%
@@ -32,7 +32,7 @@ event%>%
 write.csv(event, "view_Event_Sampled_2007-2024.csv", row.names = F)
 #######################################################################################################
 #get soil stability table to publish
-soil.stab<- dbReadTable(conUp, "view_SoilStability_All", as.is=FALSE, 
+soil.stab<- dbReadTable(conUpE, "view_SoilStability_All", as.is=FALSE, 
                         stringsAsFactors = FALSE)
 
 #select desired fields
@@ -67,11 +67,11 @@ nacheck<-soil.stab.data%>%
 str(soil.stab.data)
 
 #write soil stablity table to datafiles
-write.csv(soil.stab, "view_SoilStability_All_2007-2024.csv", row.names = F)
+write.csv(soil.stab.data, "view_SoilStability_All_2007-2024.csv", row.names = F)
 
 #####################################################################################################
 #get surface feature data to publish
-surf.fea<- dbReadTable(conUp, "view_Event_Sampled", as.is=FALSE, 
+surf.fea<- dbReadTable(conUpE, "view_Event_Sampled", as.is=FALSE, 
                        stringsAsFactors = FALSE)
 #collected this data only 2007-2019. Filter out other years
 surf.fea.data<-surf.fea%>%
@@ -106,7 +106,7 @@ write.csv(surf.fea.data, "view_SurfaceFeatures_All_2007-2020.csv", row.names = F
 #######################################################################################################
 #functional groups
 
-fxn.all<-dbReadTable(conUp, "view_FunctionalGroups_All", as.is=F, 
+fxn.all<-dbReadTable(conUpE, "view_FunctionalGroups_All", as.is=F, 
                      stringsAsFactors=F)
 #select desired fields and remove tree understory which was collected only in 2007
 fxn.all.data<-fxn.all%>%
@@ -143,7 +143,7 @@ write.csv(fxn.all.data, "view_FunctionGroups_All_2007-2024.csv", row.names = F)
 
 #########################################################################################################
 #species cover
-spp.all<-dbReadTable(conUp, "vtbl_NestedSpecies_All")
+spp.all<-dbReadTable(conUpE, "vtbl_NestedSpecies_All")
 #get species that occur in each ecosite only to reduce size
 spp.all.occur<-spp.all%>%
   group_by(EcoSite, CurrentSpecies)%>%
@@ -207,7 +207,7 @@ seedlings.all<-dbReadTable(conUpE, "view_Seedling_All")
 seedlings.all.data<-seedlings.all%>%
   select(Park, EcoSite, Plot, EventYear, TransectLetter, QuadratNumber,
          SeedlingsCollected, SeedlingsPresent, SpeciesID, FieldID,
-         SeedlingSizeGroup, SeedlingCount, AssumedSeedlingCount)
+         SeedlingSizeGroup, SeedlingCount)
 
 #check number of years
 seedlings.all.data%>%
